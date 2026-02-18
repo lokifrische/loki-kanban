@@ -7,6 +7,7 @@ interface TaskListProps {
   tasks: Task[];
   filter?: 'all' | 'todo' | 'inProgress' | 'done';
   maxDisplay?: number;
+  showNumbers?: boolean;
 }
 
 function getStatusIcon(status: Task['status']): string {
@@ -25,7 +26,7 @@ function getStatusColor(status: Task['status']): string {
   }
 }
 
-export default function TaskList({ tasks, filter = 'all', maxDisplay = 10 }: TaskListProps) {
+export default function TaskList({ tasks, filter = 'all', maxDisplay = 10, showNumbers = true }: TaskListProps) {
   const filteredTasks = filter === 'all' 
     ? tasks 
     : tasks.filter(t => t.status === filter);
@@ -44,8 +45,8 @@ export default function TaskList({ tasks, filter = 'all', maxDisplay = 10 }: Tas
   return (
     <Box flexDirection="column" paddingX={1}>
       {displayTasks.map((task, index) => (
-        <Box key={task.id} marginBottom={index < displayTasks.length - 1 ? 1 : 0}>
-          <Text color="gray">{index + 1}. </Text>
+        <Box key={task.id} marginBottom={index < displayTasks.length - 1 ? 0 : 0}>
+          {showNumbers && <Text color="gray">{String(index + 1).padStart(2, ' ')}. </Text>}
           <Text>{getStatusIcon(task.status)} </Text>
           <Text color={getStatusColor(task.status)}>{task.title}</Text>
           {task.dueDate && (
@@ -56,7 +57,7 @@ export default function TaskList({ tasks, filter = 'all', maxDisplay = 10 }: Tas
       ))}
       {remaining > 0 && (
         <Box marginTop={1}>
-          <Text color="gray" italic>...and {remaining} more</Text>
+          <Text color="gray" italic>    ...and {remaining} more (use /tasks to see all)</Text>
         </Box>
       )}
     </Box>

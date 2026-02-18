@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🦊 Loki
 
-## Getting Started
+Nick's personal AI command center. Terminal-first task management with a web Kanban board.
 
-First, run the development server:
+## Quick Start
 
 ```bash
+# Install dependencies
+npm run install:all
+
+# Launch the CLI dashboard
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Or open the web board directly
+npm run web
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+loki/
+├── src/              # CLI source (Ink + React 18)
+│   ├── cli.tsx       # Entry point
+│   ├── components/   # UI components
+│   └── lib/          # Firebase & utilities
+├── web/              # Kanban web app (Next.js + React 19)
+│   ├── src/
+│   └── package.json
+└── package.json      # Root = CLI
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## CLI Commands
 
-## Learn More
+Once the dashboard is running:
 
-To learn more about Next.js, take a look at the following resources:
+| Command | Description |
+|---------|-------------|
+| `/web` | Open Kanban board in browser |
+| `/tasks [filter]` | Show tasks (todo, doing, done, all) |
+| `/add <title>` | Add a new task |
+| `/start <number>` | Start working on a task |
+| `/done <number>` | Mark task as completed |
+| `/delete <number>` | Delete a task |
+| `/focus <number>` | Set current focus |
+| `/help` | Show all commands |
+| `/exit` | Exit dashboard |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## NPM Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Run CLI in dev mode (hot reload) |
+| `npm run build` | Build CLI for production |
+| `npm run start` | Run built CLI |
+| `npm run web` | Run web app dev server |
+| `npm run web:build` | Build web app |
+| `npm run install:all` | Install all dependencies |
 
-## Deploy on Vercel
+## Global Install
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+To use `loki` as a global command:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+npm link
+```
+
+Then run from anywhere:
+```bash
+loki          # Launch dashboard
+loki web      # Open Kanban board
+```
+
+## Live URLs
+
+- **Web Board**: https://loki-kanban.vercel.app
+- **Repository**: https://github.com/lokifrische/loki-kanban
+
+## Tech Stack
+
+- **CLI**: Ink (React for terminals) + TypeScript
+- **Web**: Next.js 16 + React 19 + Tailwind CSS
+- **Backend**: Firebase Firestore (real-time sync)
+- **Hosting**: Vercel
+
+---
+
+*Built by Loki for Nick* 🦊
