@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+/*
+ * Global styles for Loki Kanban
+ * Using Tailwind CSS v4 with custom theme variables
+ */
+
+/* Custom theme variables */
+:root {
+  --color-background: #0d1117;
+  --color-foreground: #c9d1d9;
+  --color-primary: #58a6ff;
+  --color-success: #3fb950;
+  --color-warning: #d29922;
+  --color-danger: #ff7b72;
+}
+
+/* Base styles */
+html,
+body {
+  height: 100%;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Selection styling */
+::selection {
+  background-color: rgba(88, 166, 255, 0.3);
+  color: #f0f6fc;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #484f58;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Terminal overrides - ensure xterm.js styles work correctly */
+.xterm {
+  padding: 8px;
+}
+
+.xterm-viewport {
+  overflow-y: auto !important;
+}
+
+/* Smooth transitions */
+* {
+  transition-property: background-color, border-color, color, opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Disable transitions for elements that shouldn't animate */
+.xterm *,
+[data-no-transition] {
+  transition: none !important;
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Drag and drop styles */
+[draggable="true"] {
+  cursor: grab;
+}
+
+[draggable="true"]:active {
+  cursor: grabbing;
+}

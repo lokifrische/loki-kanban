@@ -1,39 +1,31 @@
 {
-  "name": "loki",
+  "name": "loki-kanban",
   "version": "1.0.0",
-  "description": "🦊 Loki - Nick's personal AI command center",
-  "type": "module",
-  "main": "dist/cli.js",
-  "bin": {
-    "loki": "./dist/cli.js"
-  },
+  "description": "Terminal-style task management with Kanban board - built with Next.js",
+  "private": true,
   "scripts": {
-    "dev": "tsx watch src/cli.tsx",
-    "build": "tsc",
-    "start": "node dist/cli.js",
-    "web": "cd web && npm run dev",
-    "web:build": "cd web && npm run build",
-    "web:start": "cd web && npm run start",
-    "install:all": "npm install && cd web && npm install"
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "keywords": ["cli", "dashboard", "kanban", "productivity", "ai"],
-  "author": "Loki for Nick",
-  "license": "MIT",
   "dependencies": {
-    "ink": "^5.2.0",
-    "react": "^18.3.1",
-    "firebase": "^12.9.0",
-    "chalk": "^5.3.0",
-    "figures": "^6.1.0",
-    "meow": "^13.2.0",
-    "ink-text-input": "^6.0.0",
-    "date-fns": "^4.1.0",
-    "open": "^10.1.0"
+    "next": "^15.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "firebase": "^11.3.1",
+    "@xterm/xterm": "^5.5.0",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/addon-web-links": "^0.11.0"
   },
   "devDependencies": {
-    "@types/react": "^18.3.12",
-    "@types/node": "^22.10.1",
-    "typescript": "^5.7.2",
-    "tsx": "^4.19.2"
+    "@types/node": "^22.13.4",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "typescript": "^5.7.3",
+    "tailwindcss": "^4.0.6",
+    "@tailwindcss/postcss": "^4.0.6",
+    "eslint": "^9.20.1",
+    "eslint-config-next": "^15.2.0"
   }
 }
