@@ -4,50 +4,68 @@ import { useState, useEffect } from 'react';
 import { Task, TaskStatus } from '@/types/task';
 import KanbanColumn from './KanbanColumn';
 import AddTaskForm from './AddTaskForm';
+import { db } from '@/lib/firebase';
+import { 
+  collection, 
+  addDoc, 
+  deleteDoc, 
+  updateDoc, 
+  doc, 
+  onSnapshot,
+  query,
+  orderBy 
+} from 'firebase/firestore';
 
-const STORAGE_KEY = 'loki-kanban-tasks';
+const TASKS_COLLECTION = 'tasks';
 
 export default function KanbanBoard() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load tasks from localStorage on mount
+  // Subscribe to Firestore tasks collection
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      try {
-        setTasks(JSON.parse(stored));
-      } catch (e) {
-        console.error('Failed to parse stored tasks:', e);
-      }
-    }
-    setIsLoaded(true);
+    const q = query(collection(db, TASKS_COLLECTION), orderBy('createdAt', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const tasksData: Task[] = [];
+      snapshot.forEach((doc) => {
+        tasksData.push({ id: doc.id, ...doc.data() } as Task);
+      });
+      setTasks(tasksData);
+      setIsLoaded(true);
+    }, (error) => {
+      console.error('Error fetching tasks:', error);
+      setIsLoaded(true);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  // Save tasks to localStorage whenever they change
-  useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  const addTask = async (newTask: Omit<Task, 'id' | 'createdAt'>) => {
+    try {
+      await addDoc(collection(db, TASKS_COLLECTION), {
+        ...newTask,
+        createdAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error('Error adding task:', error);
     }
-  }, [tasks, isLoaded]);
-
-  const addTask = (newTask: Omit<Task, 'id' | 'createdAt'>) => {
-    const task: Task = {
-      ...newTask,
-      id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
-    };
-    setTasks((prev) => [...prev, task]);
   };
 
-  const deleteTask = (id: string) => {
-    setTasks((prev) => prev.filter((task) => task.id !== id));
+  const deleteTask = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, TASKS_COLLECTION, id));
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
   };
 
-  const updateTaskStatus = (id: string, status: TaskStatus) => {
-    setTasks((prev) =>
-      prev.map((task) => (task.id === id ? { ...task, status } : task))
-    );
+  const updateTaskStatus = async (id: string, status: TaskStatus) => {
+    try {
+      await updateDoc(doc(db, TASKS_COLLECTION, id), { status });
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
   };
 
   const statuses: TaskStatus[] = ['todo', 'inProgress', 'done'];
@@ -55,7 +73,7 @@ export default function KanbanBoard() {
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">Loading from Firebase...</div>
       </div>
     );
   }
@@ -83,6 +101,10 @@ export default function KanbanBoard() {
         To Do: {tasks.filter(t => t.status === 'todo').length} | 
         In Progress: {tasks.filter(t => t.status === 'inProgress').length} | 
         Done: {tasks.filter(t => t.status === 'done').length}
+      </div>
+      
+      <div className="mt-2 text-xs text-green-600">
+        🔥 Connected to Firebase - Changes sync in real-time
       </div>
     </div>
   );
