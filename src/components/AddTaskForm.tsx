@@ -20,8 +20,8 @@ export default function AddTaskForm({ onAdd }: AddTaskFormProps) {
 
     onAdd({
       title: title.trim(),
-      description: description.trim() || undefined,
-      dueDate: dueDate || undefined,
+      description: description.trim() || '',
+      dueDate: dueDate || '',
       status,
     });
 
